@@ -232,6 +232,8 @@ class SQLQueryManager(models.Manager):
 
 class SQLQuery(models.Model):
     query = TextField()
+    model = CharField(max_length=256, db_index=True, null=True)
+    database = CharField(max_length=256, db_index=True, null=True)
     start_time = DateTimeField(null=True, blank=True, default=timezone.now)
     end_time = DateTimeField(null=True, blank=True)
     time_taken = FloatField(blank=True, null=True)

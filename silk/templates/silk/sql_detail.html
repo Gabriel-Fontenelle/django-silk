@@ -112,6 +112,12 @@
                     <span class="numeric">{{ sql_query.time_taken }}<span class="unit">ms</span></span>
                 </div>
                 <div id="num-joins-div">
+                    Model {{ sql_query.model }}
+                </div>
+                <div id="num-joins-div">
+                    Database {{ sql_query.database }}
+                </div>
+                <div id="num-joins-div">
                     <span class="numeric">{{ sql_query.num_joins }}</span> joins
                 </div>
             </div>

@@ -66,6 +66,8 @@ def execute_sql(self, *args, **kwargs):
     sql_query = q % params
     if _should_wrap(sql_query):
         query_dict = {
+            'database': self.query.db,
+            'model': self.query.model,
             'query': sql_query,
             'start_time': timezone.now(),
             'traceback': tb
