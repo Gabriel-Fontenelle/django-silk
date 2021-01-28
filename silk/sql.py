@@ -4,6 +4,7 @@ import traceback
 from django.core.exceptions import EmptyResultSet
 from django.db import connection
 from django.utils import timezone
+from django.db import router
 
 from silk.collector import DataCollector
 from silk.config import SilkyConfig
@@ -64,9 +65,15 @@ def execute_sql(self, *args, **kwargs):
             return
     tb = ''.join(reversed(traceback.format_stack()))
     sql_query = q % params
+
+    if 'INSERT' in sql_query or 'UPDATE' in sql_query or 'DELETE' in sql_query:
+        db = router.db_for_write(self.query.model)
+    else:
+        db = router.db_for_read(self.query.model)
+
     if _should_wrap(sql_query):
         query_dict = {
-            'database': self.query.db,
+            'database': db,
             'model': self.query.model,
             'query': sql_query,
             'start_time': timezone.now(),
