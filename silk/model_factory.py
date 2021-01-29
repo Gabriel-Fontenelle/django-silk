@@ -238,13 +238,21 @@ class RequestModelFactory(object):
         path = self.request.path
         view_name = self.view_name()
 
+        kwargs = {
+            "path": path,
+            "encoded_headers": self.encoded_headers(),
+            "method": self.request.method,
+            "query_params": query_params,
+            "view_name": view_name,
+            "body": body
+        }
+
+        if hasattr(self.request, 'correlation_id'):
+            kwargs['id'] = self.request.correlation_id
+
         request_model = models.Request.objects.create(
-            path=path,
-            encoded_headers=self.encoded_headers(),
-            method=self.request.method,
-            query_params=query_params,
-            view_name=view_name,
-            body=body)
+            **kwargs
+        )
         # Text fields are encoded as UTF-8 in Django and hence will try to coerce
         # anything to we pass to UTF-8. Some stuff like binary will fail.
         try:
