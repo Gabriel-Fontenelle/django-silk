@@ -116,6 +116,10 @@ class SilkyMiddleware:
             should_profile = silky_config.SILKY_PYTHON_PROFILER_FUNC(request)
 
         request_model = RequestModelFactory(request).construct_request_model()
+        if hasattr('correlation_id', request):
+            request_model.id = request.correlation_id
+            request_model.save(update_fields=['id'])
+
         DataCollector().configure(request_model, should_profile=should_profile)
 
     @transaction.atomic()
